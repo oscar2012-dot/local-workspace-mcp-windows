@@ -2,9 +2,11 @@
 
 [繁體中文](README.md) | English
 
+**First installation: [download the ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip) → extract it → double-click `Setup.cmd`.** Follow the [step-by-step installation guide](docs/INSTALL.en.md). The normal path does not require copying commands yourself.
+
 Run [Local Workspace MCP](https://github.com/arumwu/local-workspace-mcp) on Windows through WSL2, then connect it to ChatGPT using your own OpenAI private tunnel. [oscar2012-dot](https://github.com/oscar2012-dot) maintains this project's installation entry points and connection integration. The MCP server comes from upstream; it is not an original server created by this project, and this is not an official OpenAI product.
 
-**This community integration is currently an alpha.** An earlier prototype completed end-to-end testing on one computer. This generalized version has not completed end-to-end verification on a clean computer, in ChatGPT Desktop, or through the Docker document workflow. Start with disposable test data; see [Testing status and acceptance checks](docs/TESTING.en.md) for the exact scope.
+**This community integration is currently an alpha.** The original personal Windows/WSL installation successfully connected through a tunnel and performed real file reads and writes; that experience remains valid. The new generalized setup wizard has not yet completed end-to-end testing on a clean computer. This version also lacks end-to-end verification of ChatGPT Desktop and the Docker document workflow. Start with test data; see [Testing status and acceptance checks](docs/TESTING.en.md) for the exact scope.
 
 ## Supported scope
 
@@ -21,17 +23,24 @@ Run [Local Workspace MCP](https://github.com/arumwu/local-workspace-mcp) on Wind
 
 Full mode may access other WSL paths and Windows drives under `/mnt`. Enabling Docker alongside it only confines the worker; it does not isolate the host tools. Read [SECURITY.en.md](SECURITY.en.md) before proceeding.
 
-## Getting started
+## Beginner setup and daily use
 
-1. Complete initial WSL2/Ubuntu setup. Ubuntu needs Python 3.12 or newer, Git, uv and ripgrep (`rg`); full mode also needs Node.js 20.9 or newer and npm. For `documents`, start Docker and enable WSL integration for that Ubuntu distribution. The installer checks prerequisites and does not install global packages for you.
-2. Download or clone this project, extract it to a local directory, and review the scripts and security notes.
-3. Run `Install.cmd`, initially keeping the default `documents` mode. It uses the distribution's default non-root user. Use the options below if you need to select a distribution or workspace.
-4. Follow [Connecting to ChatGPT](docs/CHATGPT.en.md) to create your own private tunnel, then run `Connect.cmd`. Enter the key only at the local hidden-input prompt.
-5. Keep the connection window open, check its state with `Status.cmd`, and ask ChatGPT to read a test file containing no sensitive information.
+1. [Download the ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip). Verify its source and review the code; if needed, use **Properties → Unblock** on the ZIP before extracting it completely.
+2. Double-click `Setup.cmd` and choose Traditional Chinese or English. The wizard checks WSL/Ubuntu, Linux tools and Docker in order, asking before installing missing components. You still complete the Ubuntu user setup, Docker license acceptance and WSL integration shown on screen.
+3. Wait for `LOCAL_INSTALL_READY=PASS`, then follow the [private ChatGPT connection steps](docs/CHATGPT.en.md) to create your own tunnel. Run `Connect.cmd` and enter the key at the local hidden prompt.
+4. After `WINDOWS_TUNNEL_READY=PASS` appears, add your own Tunnel connection in ChatGPT and complete the [hello.txt read/write test](docs/CHATGPT.en.md#5-confirm-the-connection-with-hellotxt). For daily use, run `Connect.cmd`; stop with **Ctrl+C**.
 
-For prerequisite installation, see the [official Microsoft WSL guide](https://learn.microsoft.com/en-us/windows/wsl/install), [Docker Desktop WSL2 integration instructions](https://docs.docker.com/desktop/features/wsl/) and [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/). Prepare the required Linux tools inside the selected Ubuntu distribution.
+The [complete installation guide](docs/INSTALL.en.md) explains the expected result and what to do if each stage gets stuck. Running `Install.cmd` without arguments also opens the wizard. The wizard currently installs only the default documents mode; it does not switch to full mode when Docker fails.
 
-The PowerShell entry point provides the same actions as the double-click launchers:
+Installation may require Windows UAC, your Ubuntu sudo password or a restart, through the relevant confirmation steps. It does not restart Windows automatically. After restarting, double-click `Setup.cmd` again; it rechecks the environment and skips components that are ready, without adding a startup task. A matching existing installation is verified and reused, not overwritten with a different mode.
+
+## Advanced installation
+
+Run the following commands in **Windows PowerShell opened in the project directory**. `Install.cmd` with arguments and `scripts/windows.ps1` use the advanced entry point. Prepare its prerequisites yourself first: Ubuntu 24.04 or newer, Python 3.12 or newer, Git, uv, ripgrep (`rg`) and working Docker; full mode also requires Node.js 20.9 or newer and npm. This advanced entry point does not automatically install global packages.
+
+Official references: [Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/install), [Docker WSL2 integration](https://docs.docker.com/desktop/features/wsl/) and [uv installation](https://docs.astral.sh/uv/getting-started/installation/).
+
+Invoke individual actions directly:
 
 ```powershell
 .\scripts\windows.ps1 -Action Install
@@ -64,7 +73,7 @@ If WSL is not installed, you can explicitly run `Install.cmd -InstallWSL -Distro
 
 `Verify` creates and retains a uniquely named test file containing no sensitive data in the workspace, and writes a verification report to the state directory. It does not prove that ChatGPT or the Docker document workflow works end to end. For daily use, run `Connect.cmd`. Stop the connection with **Ctrl+C** and allow cleanup to finish; do not substitute closing the terminal window for a normal stop.
 
-The scripts do not automatically request administrator privileges, change the global PowerShell execution policy, enable startup at login, or register a connection with an MCP client. Initial WSL, Docker and account-permission setup remains the user's responsibility.
+The wizard requests required privileges only after you agree to the corresponding installation step. It does not change the global PowerShell execution policy, enable startup at login or register a connection with an MCP client. You still create your OpenAI account setup, tunnel and ChatGPT connection.
 
 If scripts extracted from a GitHub ZIP are blocked or reported as unsigned, Windows may have retained the download's Mark-of-the-Web. First verify the source and review the code, then use **Properties → Unblock** on that ZIP and extract it again into a new directory; alternatively, unblock only a specific script you have reviewed. The launchers use process-scoped `RemoteSigned` and do not unblock files automatically. Do not change the global policy to `Unrestricted` or `Bypass` to work around this. Continue to follow management policies on organization-managed devices.
 
@@ -89,6 +98,7 @@ Use `-State` to select another dedicated directory under the WSL home, using an 
 
 ## Documentation and licensing
 
+- [Installation from scratch](docs/INSTALL.en.md)
 - [Private ChatGPT connection](docs/CHATGPT.en.md)
 - [Testing and issue reports](docs/TESTING.en.md)
 - [Security boundaries and vulnerability reports](SECURITY.en.md)
