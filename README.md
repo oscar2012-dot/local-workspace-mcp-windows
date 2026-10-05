@@ -2,9 +2,11 @@
 
 繁體中文 | [English](README.en.md)
 
+**第一次安裝： [下載 ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip) → 解壓 → 雙擊 `Setup.cmd`。** 請照 [從零開始逐步安裝指南](docs/INSTALL.md) 操作；一般流程不用自行貼指令。
+
 讓 Windows 使用者透過 WSL2 執行 [Local Workspace MCP](https://github.com/arumwu/local-workspace-mcp)，再用自己的 OpenAI 私人 tunnel 連接 ChatGPT。本專案由 [oscar2012-dot](https://github.com/oscar2012-dot) 維護安裝入口與連線整合；MCP 伺服器來自上游，並非本專案原創，也不是 OpenAI 官方產品。
 
-**目前為社群整合 alpha。** 早期原型曾在單一電腦完成端到端測試；這個通用版本尚未完成乾淨電腦、ChatGPT Desktop 與 Docker 文件流程的端到端驗證。請先用可丟棄的測試資料；詳細範圍見 [測試紀錄與驗收方式](docs/TESTING.md)。
+**目前為社群整合 alpha。** 原本的個人 Windows／WSL 安裝已實際完成 tunnel 連線及檔案讀寫，這些使用經驗有效。新加入的通用安裝精靈仍未在乾淨電腦完成端到端測試；ChatGPT Desktop 與 Docker 文件流程也尚未完成這個版本的端到端驗證。請先用測試資料；詳細範圍見 [測試紀錄與驗收方式](docs/TESTING.md)。
 
 ## 支援範圍
 
@@ -21,17 +23,24 @@
 
 Full 模式可能存取 WSL 中的其他路徑及 `/mnt` 下的 Windows 磁碟。即使同時啟用 Docker，容器限制也只適用於 worker，不會隔離主機工具。請先閱讀 [SECURITY.md](SECURITY.md)。
 
-## 開始使用
+## 新手安裝與每日使用
 
-1. 先完成 WSL2／Ubuntu 的首次設定。Ubuntu 內需有 Python 3.12 以上、Git、uv 與 ripgrep（`rg`）；full 另需 Node.js 20.9 以上與 npm。使用 `documents` 時，啟動 Docker 並確認已啟用該 Ubuntu 的 WSL 整合。安裝器會檢查前置條件，不會替你進行全域套件安裝。
-2. 下載或 clone 本專案，解壓到本機資料夾，閱讀腳本與安全說明。
-3. 執行 `Install.cmd`；先保留預設 `documents`。程式使用該發行版的預設非 root 使用者；若需要指定發行版或工作目錄，使用下列參數。
-4. 依 [ChatGPT 連線指南](docs/CHATGPT.md) 建立自己的私人 tunnel，再執行 `Connect.cmd`。金鑰只在本機隱藏輸入提示中輸入。
-5. 保持連線視窗開啟，以 `Status.cmd` 檢查狀態，再由 ChatGPT 讀取一個沒有敏感內容的測試檔案。
+1. [下載 ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip)，確認來源並閱讀程式後，視需要在 ZIP 的「內容 → 解除封鎖」，再完整解壓。
+2. 雙擊 `Setup.cmd`，選擇繁體中文或 English。精靈依序檢查 WSL／Ubuntu、Linux 工具與 Docker；需要安裝時會先詢問。Ubuntu 使用者設定、Docker 授權與 WSL 整合仍需你依畫面完成。
+3. 等到 `LOCAL_INSTALL_READY=PASS`，再依 [ChatGPT 私人連線步驟](docs/CHATGPT.md) 建立自己的 tunnel，執行 `Connect.cmd` 並在本機隱藏提示輸入 key。
+4. 看到 `WINDOWS_TUNNEL_READY=PASS` 後，在 ChatGPT 加入自己的 Tunnel 連線，完成 [hello.txt 讀寫測試](docs/CHATGPT.md#5-用-hellotxt-確認真的連得上)。每日只需執行 `Connect.cmd`；停止時按 **Ctrl+C**。
 
-前置元件的安裝方式見 [Microsoft WSL 官方指南](https://learn.microsoft.com/en-us/windows/wsl/install)、[Docker Desktop 的 WSL2 整合說明](https://docs.docker.com/desktop/features/wsl/) 與 [uv 安裝指南](https://docs.astral.sh/uv/getting-started/installation/)。本專案需要的 Linux 工具應準備在選定的 Ubuntu 中。
+[完整安裝指南](docs/INSTALL.md) 包含每一步的預期結果與卡住時的處理。`Install.cmd` 不帶參數時也會開啟精靈。精靈目前只安裝預設 documents 模式，不會在 Docker 出錯時切換成 full。
 
-PowerShell 入口與雙擊入口相同：
+安裝可能要求 Windows UAC、Ubuntu 的 sudo 密碼或重新開機，均依確認流程處理；不會自動重新開機。重新開機後再次雙擊 `Setup.cmd`，會重新檢查並略過已就緒的項目，沒有新增開機自啟工作。符合設定的既有安裝會驗證重用，不會覆蓋成另一種模式。
+
+## 進階安裝
+
+以下指令在**專案資料夾中的 Windows PowerShell** 執行。`Install.cmd` 帶參數，以及 `scripts/windows.ps1`，使用進階入口，必須先自行備妥前置條件：Ubuntu 24.04 以上、Python 3.12 以上、Git、uv、ripgrep（`rg`）與可用的 Docker；full 另需 Node.js 20.9 以上與 npm。這個進階入口不會自動安裝全域套件。
+
+官方參考：[Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/install)、[Docker WSL2 整合](https://docs.docker.com/desktop/features/wsl/)、[uv 安裝](https://docs.astral.sh/uv/getting-started/installation/)。
+
+直接呼叫各操作：
 
 ```powershell
 .\scripts\windows.ps1 -Action Install
@@ -64,7 +73,7 @@ PowerShell 入口與雙擊入口相同：
 
 `Verify` 會在 workspace 建立並保留唯一的無敏感資料測試檔，以及在 state 寫入驗證結果；它不等於 ChatGPT 或 Docker 文件流程已端到端通過。每日使用時執行 `Connect.cmd`；停止連線請按 **Ctrl+C**，讓程序完成清理。不要以直接關閉終端視窗代替正常停止。
 
-腳本不會自動要求系統管理員權限、變更全域 PowerShell execution policy、設定開機自啟或替任何 MCP client 註冊連線。WSL、Docker 與帳號權限的首次準備仍由使用者完成。
+精靈只會在你同意對應安裝步驟後請求所需權限；不會變更全域 PowerShell execution policy、設定開機自啟或替任何 MCP client 註冊連線。OpenAI 帳號、tunnel 與 ChatGPT 連線仍由你建立。
 
 若從 GitHub 下載 ZIP 後出現「未經數位簽署」或腳本遭封鎖，可能是 Windows 保留了下載來源標記（Mark-of-the-Web）。請先確認來源並檢閱程式，再於該 ZIP 的「內容／Properties → 解除封鎖／Unblock」解除封鎖，重新解壓到新的資料夾；也可只處理已檢閱的特定腳本。啟動器採用僅限當次程序的 `RemoteSigned`，不會自動解除封鎖。請勿為此將全域執行原則改為 `Unrestricted` 或 `Bypass`；公司裝置仍應遵守管理原則。
 
@@ -89,6 +98,7 @@ PowerShell 入口與雙擊入口相同：
 
 ## 文件與授權
 
+- [從零開始安裝](docs/INSTALL.md)
 - [ChatGPT 私人連線](docs/CHATGPT.md)
 - [測試與回報方式](docs/TESTING.md)
 - [安全邊界與漏洞回報](SECURITY.md)
