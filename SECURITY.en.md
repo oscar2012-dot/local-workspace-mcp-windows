@@ -27,6 +27,10 @@ If a key is exposed, immediately revoke it in the Platform, stop the local conne
 
 ## Dependencies and downloads
 
+`Setup.cmd` is an interactive installer, not an unattended background installation. It asks before adding WSL/Ubuntu, preparing Ubuntu packages, installing Docker Desktop, and starting the connection. Windows elevation is limited to the requested WSL installation; Linux packages use `sudo`, with passwords handled by the local terminal. The wizard does not save passwords, change global PowerShell execution policies, reboot automatically, or configure startup at login. Users review Docker's terms themselves and must follow organization-managed device policies.
+
+If uv is missing, the bootstrap downloads Astral's official `0.12.19` Linux x64 archive, checks its embedded SHA-256, then extracts only the expected regular files. Existing tools are not forcibly replaced. Ubuntu packages and Docker Desktop through WinGet use the user's configured trusted package sources at installation time; not every component is version-pinned. Package signature/hash checks are not bypassed. The new wizard uses documents mode and stops with guidance if it encounters existing full-mode settings; it does not silently change permissions or workspace choices.
+
 Upstream source is pinned to `ba42837e7aa54cd265e62023e5079f0e4affdf84`, and tunnel-client is pinned to the official `v0.0.15` release. Pinning versions helps reproducibility and review, but does not mean they are free of vulnerabilities. Installation still downloads third-party source code, packages, and container content required by the selected mode; this repository does not include third-party binaries.
 
 Upstream [PR #4](https://github.com/arumwu/local-workspace-mcp/pull/4) reported 7 existing npm audit findings (2 moderate, 5 high), including `braces`, for which no patched version was available at the time. These are known inherited risks. This integration does not claim to fix these dependencies and does not independently alter the upstream lockfile. Audit counts and exploitability change with packages and vulnerability databases. Before production deployment, recheck upstream, security advisories, and the code paths actually used.
@@ -35,7 +39,7 @@ Upstream [PR #4](https://github.com/arumwu/local-workspace-mcp/pull/4) reported 
 
 Private tunnels send MCP requests and results through OpenAI. Keeping the server local does not mean all processing occurs locally. Understand your account and workspace data policies before providing files.
 
-Publishing the source code does not create a common tunnel, shared key, or public MCP service for users. This project does not automatically change firewall settings, elevate privileges, enable startup at boot, or register a client. To stop a connection normally, use Ctrl+C and check its status.
+Publishing the source code does not create a common tunnel, shared key, or public MCP service for users. This project does not open inbound firewall ports, elevate without confirmation, enable startup at boot, or automatically register a ChatGPT connection. Third-party installers may configure services or Windows components as part of their own setup; review their prompts. To stop a connection normally, use Ctrl+C and check its status.
 
 ## Reporting security issues
 
