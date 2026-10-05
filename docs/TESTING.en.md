@@ -4,11 +4,11 @@
 
 ## Current evidence
 
-This is a generalized Windows/WSL integration alpha. An earlier single-computer prototype completed connection, tool-discovery and file read/write testing. It used machine-specific settings and the full-mode path with the Docker worker skipped, so it does not establish acceptance of this version or the default documents mode.
+This is a Windows/WSL community integration alpha. Connection, tool discovery, and file read/write operations were tested on the maintainer's real Windows/WSL computer, not in a cloud simulation. That test used the earlier configuration and full mode with the Docker worker skipped. This remains valid real-machine evidence; the new guided installer's clean-computer flow and the default documents/Docker workflow require separate acceptance checks.
 
 | Scope | Status |
 | --- | --- |
-| Earlier single-computer prototype | Completed end-to-end testing; not equivalent to this generalized version |
+| Maintainer's earlier Windows/WSL configuration | Real-machine connection, tool discovery, and file read/write testing completed |
 | Static and automated checks for the generalized installer | Refer to the CI and test output for the specific revision |
 | Clean Windows x64 + WSL2 Ubuntu installation | End-to-end verification not completed |
 | Generalized version's ChatGPT Desktop connection and actual tool calls | End-to-end verification not completed |
@@ -17,7 +17,30 @@ This is a generalized Windows/WSL integration alpha. An earlier single-computer 
 
 Passing automated or mocked tests proves only the behavior they cover. It does not establish that WSL, Docker, networking, account authorization and ChatGPT UI integration all work together.
 
-Historical initial-alpha checks (2026-10-04, before the bilingual documentation was added): 79 tests ran on Windows with Python 3.12; 72 passed and 7 were skipped because they required POSIX behavior or symbolic-link permissions. There were no failures. Python compilation, Windows PowerShell 5.1 syntax parsing, and privacy-rule scanning of the 21 source files staged at that time passed. This restricted environment could not start the Git Bash syntax check. Linux permissions, flock and Bash checks still need CI verification. CI is provided, but only actual run results count as passing.
+The initial public source passed all four Windows/Ubuntu × Python 3.12/3.14 combinations in the [2026-10-04 CI run](https://github.com/oscar2012-dot/local-workspace-mcp-windows/actions/runs/37210176002). For the new wizard, inspect Actions for its specific commit; the initial result does not establish later revisions' results.
+
+Historical initial-alpha checks (2026-10-04, before the bilingual documentation was added): 79 tests ran on Windows with Python 3.12; 72 passed and 7 were skipped because they required POSIX behavior or symbolic-link permissions. There were no failures. Python compilation, Windows PowerShell 5.1 syntax parsing, and privacy-rule scanning of the 21 source files staged at that time passed. This restricted environment could not start Git Bash; the subsequent CI run above covered Linux permissions, flock, and Bash checks.
+
+## Guided installer checks without installation
+
+Local wizard-update results (2026-10-05): Windows/Python 3.12 ran 122 tests, with 115 passing and 7 platform/permission-dependent skips, and no failures. Windows PowerShell 5.1 and PowerShell 7 each passed 23 offline wizard scenarios. Bash syntax checks passed. These checks did not actually install WSL/Docker or start a ChatGPT connection.
+
+From Windows PowerShell in the project directory:
+
+```powershell
+.\Setup.cmd -Language en -CheckOnly
+```
+
+`SETUP_CHECK=PASS` means prerequisites passed inspection; `SETUP_CHECK=NEEDS_ACTION` means preparation is still needed. This mode does not download, install, save settings, or prompt for keys. If the selected WSL distribution is stopped, it asks you to open Ubuntu yourself and rerun the check instead of starting it. It is not an MCP or ChatGPT end-to-end check.
+
+Maintainer offline regression tests do not perform real package installation or account authorization:
+
+```powershell
+python -m unittest discover -s tests -v
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\tests\test_setup_windows.ps1
+```
+
+CI also parses all PowerShell scripts, checks both Bash entry points, and tests wizard behavior on Windows PowerShell 5.1 and PowerShell 7. Mock tests do not replace real UAC, restart, Ubuntu first-run, or WinGet/Docker UI acceptance checks.
 
 ## Quick local checks
 
@@ -46,8 +69,8 @@ The check examines staged blobs: the exact contents intended for the next commit
 
 Use a disposable workspace for each case and record versions and results. The following is a plan for tests still to be performed, not a record of completed tests.
 
-1. Install WSL2/Ubuntu on Windows x64 and complete the Linux user's first-run setup. Record Windows, WSL, Ubuntu and PowerShell versions.
-2. Start Docker, enable WSL integration for that Ubuntu distribution, and run the default `Install.cmd`. Confirm there is no automatic elevation, startup-at-login configuration, global policy change or client registration.
+1. On a Windows x64 test machine without this integration, follow the [step-by-step guide](INSTALL.en.md) to download, unblock, extract, and double-click `Setup.cmd`. Test both languages and record Windows, WSL, Ubuntu, and PowerShell versions.
+2. Follow the prompts to approve WSL installation, restart if required and reopen Setup, create the Ubuntu account, and approve prerequisite and Docker installation. Check that declining or cancelling stops safely; UAC/sudo appears only after consent. There must be no automatic reboot, login-startup setup, global policy change, or ChatGPT connection registration. After enabling Docker's WSL integration, confirm `LOCAL_INSTALL_READY=PASS` while ChatGPT is still reported as not configured.
 3. Repeat installation with the same settings. Confirm existing user files and unrelated settings are preserved, errors are understandable, and no secrets are disclosed.
 4. Test workspace paths containing spaces and Traditional Chinese characters, and distribution selection when more than one WSL distribution exists.
 5. Run `Connect.cmd` with your own tunnel and restricted key. Confirm the key is not echoed, Windows settings contain no key, and private Linux file permissions are correct.
@@ -70,7 +93,7 @@ Mode: documents | full
 Docker worker: enabled | skipped
 Docker version, if applicable:
 Client surface: ChatGPT Desktop | browser | other
-Action: Install | Connect | Status | Verify
+Action: Setup | CheckOnly | Install | Connect | Status | Verify
 Expected result:
 Actual result (redacted):
 Minimal reproduction using disposable files:
