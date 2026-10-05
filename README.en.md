@@ -2,6 +2,8 @@
 
 [繁體中文](README.md) | English
 
+> **Using a Mac?** See the original author's [arumwu / Local Workspace MCP installation guide](https://github.com/arumwu/local-workspace-mcp/blob/main/docs/README.en.md#install-macos--linux) for macOS instructions. This project provides community integration and installation instructions for Windows/WSL.
+
 **First installation: [download the ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip) → extract it → double-click `Setup.cmd`.** Follow the [step-by-step installation guide](docs/INSTALL.en.md). The normal path does not require copying commands yourself.
 
 Run [Local Workspace MCP](https://github.com/arumwu/local-workspace-mcp) on Windows through WSL2, then connect it to ChatGPT using your own OpenAI private tunnel. [oscar2012-dot](https://github.com/oscar2012-dot) maintains this project's installation entry points and connection integration. The MCP server comes from upstream; it is not an original server created by this project, and this is not an official OpenAI product.
