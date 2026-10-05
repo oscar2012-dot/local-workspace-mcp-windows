@@ -47,4 +47,6 @@ OpenAI, ChatGPT and Codex names identify the products this integration can conne
 
 ## Other installed components
 
+The guided prerequisites bootstrap obtains [Astral uv](https://github.com/astral-sh/uv) `0.12.19` from its official release if uv is absent. uv is dual-licensed under MIT and Apache-2.0; refer to the [uv license notices](https://github.com/astral-sh/uv/tree/0.12.19). No uv binary is bundled in this repository. Ubuntu packages, Microsoft WSL/WinGet, and Docker Desktop retain their separate terms; the integration's MIT license does not grant a Docker Desktop subscription or accept its agreement on a user's behalf.
+
 Python, Node.js/npm packages, Docker, container images and operating-system components retain their individual licenses. The pinned upstream dependency lock is preserved. Review upstream manifests, lockfiles and installed-package notices before redistribution; this file is attribution, not an exhaustive dependency license inventory.
