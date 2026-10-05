@@ -2,6 +2,8 @@
 
 繁體中文 | [English](README.en.md)
 
+> **使用 Mac？** 請前往原作者 [arumwu／Local Workspace MCP 的繁體中文安裝指南](https://github.com/arumwu/local-workspace-mcp/blob/main/docs/README.zh-TW.md)，內含 macOS 安裝方式。本專案提供 Windows／WSL 的社群整合與安裝說明。
+
 **第一次安裝： [下載 ZIP](https://github.com/oscar2012-dot/local-workspace-mcp-windows/archive/refs/heads/main.zip) → 解壓 → 雙擊 `Setup.cmd`。** 請照 [從零開始逐步安裝指南](docs/INSTALL.md) 操作；一般流程不用自行貼指令。
 
 讓 Windows 使用者透過 WSL2 執行 [Local Workspace MCP](https://github.com/arumwu/local-workspace-mcp)，再用自己的 OpenAI 私人 tunnel 連接 ChatGPT。本專案由 [oscar2012-dot](https://github.com/oscar2012-dot) 維護安裝入口與連線整合；MCP 伺服器來自上游，並非本專案原創，也不是 OpenAI 官方產品。
