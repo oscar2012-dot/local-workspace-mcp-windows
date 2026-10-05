@@ -47,4 +47,6 @@ OpenAI、ChatGPT 與 Codex 名稱用於辨識本整合可連接的產品。本�
 
 ## 其他安裝元件
 
+引導式前置環境安裝器會在缺少 uv 時，從官方 release 取得 [Astral uv](https://github.com/astral-sh/uv) `0.12.19`。uv 採 MIT／Apache-2.0 雙重授權，請參閱 [uv 授權聲明](https://github.com/astral-sh/uv/tree/0.12.19)。本倉庫未夾帶 uv 執行檔。Ubuntu 套件、Microsoft WSL／WinGet 與 Docker Desktop 各有自己的條款；本整合版的 MIT 授權不會授予 Docker Desktop 訂閱，也不會代表使用者同意其條款。
+
 Python、Node.js／npm 套件、Docker、容器映像與作業系統元件各自保留其授權。固定版本的上游相依套件鎖定檔維持原樣。再散布前，請檢查上游的套件資訊清單、鎖定檔與已安裝套件的聲明；本文件用於標示第三方歸屬，並非完整的相依套件授權清冊。
